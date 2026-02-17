@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authAPI } from './auth.api';
+import useAuth from '../../hooks/useAuth';
 import PageLayout from '../../components/layout/PageLayout';
 
 const LoginPage = () => {
@@ -8,6 +9,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,7 +17,7 @@ const LoginPage = () => {
 
     try {
       const res = await authAPI.login({ identifier, password });
-      localStorage.setItem('token', res.data.token);
+      login(res.data.token);
       navigate('/dashboard');
     } catch (err) {
       setError('Login failed. Please try again.');

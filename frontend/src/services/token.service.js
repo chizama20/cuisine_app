@@ -29,9 +29,22 @@ export const getUserIdFromToken = () => {
   }
 };
 
-// Check if user is authenticated
+// Check if the token has expired
+export const isTokenExpired = () => {
+  const token = getToken();
+  if (!token) return true;
+
+  try {
+    const decoded = jwtDecode(token);
+    return decoded.exp < Date.now() / 1000;
+  } catch (error) {
+    return true;
+  }
+};
+
+// Check if user is authenticated (token exists and is not expired)
 export const isAuthenticated = () => {
-  return !!getToken();
+  return !!getToken() && !isTokenExpired();
 };
 
 // Get user data from token

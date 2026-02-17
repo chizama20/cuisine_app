@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from '../context/AuthContext';
 import HomePage from '../pages/HomePage';
 import LoginPage from '../features/auth/LoginPage';
 import RegisterPage from '../features/auth/RegisterPage';
@@ -10,6 +11,7 @@ import ProtectedRoute from './ProtectedRoute';
 function Router() {
   return (
     <BrowserRouter>
+      <AuthProvider>
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<HomePage />} />
@@ -44,6 +46,7 @@ function Router() {
           }
         />
       </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

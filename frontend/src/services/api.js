@@ -4,6 +4,7 @@
  */
 
 import axios from 'axios';
+import { getToken, removeToken } from './token.service';
 
 const API_BASE_URL = 'http://localhost:5000';
 
@@ -18,7 +19,7 @@ const api = axios.create({
 // Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = getToken();
     if (token) {
       config.headers['Authorization'] = token;
     }
@@ -34,9 +35,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Unauthorized - clear token and redirect to login
-      localStorage.removeItem('token');
-      window.location.href = '/login';
+      removeToken();
     }
     return Promise.reject(error);
   }
