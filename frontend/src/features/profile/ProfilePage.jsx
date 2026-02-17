@@ -79,21 +79,6 @@ const ProfilePage = () => {
         </div>
       )}
 
-      {/* Explanation Paragraph */}
-      <div style={{ marginTop: '20px', padding: '20px', backgroundColor: '#f5f5f5', borderRadius: '8px' }}>
-        <h3 style={{ fontSize: '1.5rem', color: '#007bff', marginBottom: '15px' }}>Understanding JWT-Based Access</h3>
-        <p style={{ fontSize: '1.1rem', color: '#555', lineHeight: '1.6' }}>
-          This profile page fetches your data from the server using the JWT token stored in your browser's localStorage.
-          The token is automatically sent with each request to authenticate you.
-        </p>
-        <p style={{ fontSize: '1.1rem', color: '#555', lineHeight: '1.6' }}>
-          If you log out, the JWT token will be removed, and you will no longer be able to access this page.
-          Try logging out and accessing this page directly - you'll be redirected to the login page.
-        </p>
-        <p style={{ fontSize: '1.1rem', color: '#555', lineHeight: '1.6' }}>
-          This demonstrates how protected routes work with JWT authentication.
-        </p>
-      </div>
     </div>
   );
 };

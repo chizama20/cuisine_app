@@ -102,7 +102,6 @@ const CreateRecipePage = () => {
         description,
         region,
         country,
-        author_id: user.id,
         ingredients,
         steps
       };

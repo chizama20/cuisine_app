@@ -75,7 +75,7 @@ const RegisterPage = () => {
           style={{ width: '100%', padding: '10px', marginBottom: '10px', borderRadius: '4px', border: '1px solid #ddd' }}
         />
         <input
-          type="number"
+          type="tel"
           placeholder="Phone Number"
           value={phone}
           onChange={e => setPhone(e.target.value)}
@@ -104,18 +104,6 @@ const RegisterPage = () => {
         </button>
       </form>
 
-      {/* Registration Info */}
-      <div style={{ marginTop: '30px', padding: '20px', backgroundColor: '#f5f5f5', borderRadius: '8px', maxWidth: '800px', margin: '30px auto' }}>
-        <h3 style={{ fontSize: '1.5rem', color: '#007bff', marginBottom: '15px' }}>
-          Create Your Account
-        </h3>
-        <p style={{ fontSize: '1.1rem', lineHeight: '1.6', color: '#555' }}>
-          Register to create your account. After registration, you'll be redirected to the login page where you can sign in with your credentials.
-        </p>
-        <p style={{ fontSize: '1.1rem', lineHeight: '1.6', color: '#555' }}>
-          Your password will be securely hashed before being stored in the database.
-        </p>
-      </div>
     </div>
   );
 };

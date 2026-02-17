@@ -36,7 +36,7 @@ function Router() {
         />
 
         <Route
-          path="/CreateRecipe"
+          path="/create-recipe"
           element={
             <ProtectedRoute>
               <CreateRecipePage />

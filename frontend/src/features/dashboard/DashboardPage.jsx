@@ -11,7 +11,7 @@ const DashboardPage = () => {
   };
 
   const handleMakeRecipe = () => {
-    navigate('/CreateRecipe');
+    navigate('/create-recipe');
   }
 
   return (
