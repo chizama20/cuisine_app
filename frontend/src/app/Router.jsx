@@ -6,6 +6,8 @@ import RegisterPage from '../features/auth/RegisterPage';
 import DashboardPage from '../features/dashboard/DashboardPage';
 import ProfilePage from '../features/profile/ProfilePage';
 import CreateRecipePage from '../features/recipes/CreateRecipePage';
+import RecipeDetailPage from '../features/recipes/RecipeDetailPage';
+import EditRecipePage from '../features/recipes/EditRecipePage';
 import ProtectedRoute from './ProtectedRoute';
 
 function Router() {
@@ -17,6 +19,7 @@ function Router() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/recipes/:id" element={<RecipeDetailPage />} />
 
         {/* Private routes */}
         <Route
@@ -42,6 +45,15 @@ function Router() {
           element={
             <ProtectedRoute>
               <CreateRecipePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/recipes/:id/edit"
+          element={
+            <ProtectedRoute>
+              <EditRecipePage />
             </ProtectedRoute>
           }
         />

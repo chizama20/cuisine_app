@@ -37,7 +37,7 @@ CREATE TABLE ingredients (
   recipe_id INT NOT NULL,
   name VARCHAR(100) NOT NULL,
   amount VARCHAR(50) NOT NULL,
-  CONSTRAINT fk_recipe_ingredient FOREIGN KEY (recipe_id) REFERENCES recipes(id)
+  CONSTRAINT fk_recipe_ingredient FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Steps table
@@ -46,6 +46,13 @@ CREATE TABLE steps (
   recipe_id INT NOT NULL,
   step_number INT NOT NULL,
   instruction TEXT NOT NULL,
-  CONSTRAINT fk_recipe_step FOREIGN KEY (recipe_id) REFERENCES recipes(id),
+  CONSTRAINT fk_recipe_step FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
   UNIQUE(recipe_id, step_number)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Migration: Add ON DELETE CASCADE to existing databases
+-- Run these if your tables already exist without cascade:
+-- ALTER TABLE ingredients DROP FOREIGN KEY fk_recipe_ingredient;
+-- ALTER TABLE ingredients ADD CONSTRAINT fk_recipe_ingredient FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE;
+-- ALTER TABLE steps DROP FOREIGN KEY fk_recipe_step;
+-- ALTER TABLE steps ADD CONSTRAINT fk_recipe_step FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE;

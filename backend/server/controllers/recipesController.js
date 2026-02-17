@@ -3,7 +3,12 @@ const { query } = require('../config/db');
 const getRecipe = async (req, res) => {
   const recipeID = req.params.id;
 
-  const recipeSQL = 'SELECT id, title, description, region, country, author_id, created_at FROM recipes WHERE id = ?';
+  const recipeSQL = `
+    SELECT r.id, r.title, r.description, r.region, r.country, r.author_id, r.created_at,
+           u.firstName, u.lastName
+    FROM recipes r
+    JOIN users u ON r.author_id = u.id
+    WHERE r.id = ?`;
   const ingredientsSQL = 'SELECT name, amount FROM ingredients WHERE recipe_id = ?';
   const stepsSQL = 'SELECT step_number, instruction FROM steps WHERE recipe_id = ? ORDER BY step_number ASC';
 
@@ -82,4 +87,70 @@ const createRecipe = async (req, res) => {
   }
 };
 
-module.exports = { getRecipe, getAllRecipes, getRecipesByUser, createRecipe };
+const updateRecipe = async (req, res) => {
+  const recipeID = req.params.id;
+  const { title, description, region, country, ingredients, steps } = req.body;
+
+  if (!title || !description || !region || !country || !ingredients || !steps) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  try {
+    // Verify ownership
+    const ownerResult = await query('SELECT author_id FROM recipes WHERE id = ?', [recipeID]);
+    if (ownerResult.length === 0) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+    if (ownerResult[0].author_id !== req.user.userId) {
+      return res.status(403).json({ message: 'Not authorized to edit this recipe' });
+    }
+
+    // Update recipe fields
+    await query(
+      'UPDATE recipes SET title = ?, description = ?, region = ?, country = ? WHERE id = ?',
+      [title, description, region, country, recipeID]
+    );
+
+    // Replace ingredients
+    await query('DELETE FROM ingredients WHERE recipe_id = ?', [recipeID]);
+    for (const ing of ingredients) {
+      await query('INSERT INTO ingredients (recipe_id, name, amount) VALUES (?, ?, ?)', [recipeID, ing.name, ing.amount]);
+    }
+
+    // Replace steps
+    await query('DELETE FROM steps WHERE recipe_id = ?', [recipeID]);
+    for (const st of steps) {
+      await query('INSERT INTO steps (recipe_id, step_number, instruction) VALUES (?, ?, ?)', [recipeID, st.step_number, st.instruction]);
+    }
+
+    res.json({ message: 'Recipe updated successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Database error', error: err.message });
+  }
+};
+
+const deleteRecipe = async (req, res) => {
+  const recipeID = req.params.id;
+
+  try {
+    // Verify ownership
+    const ownerResult = await query('SELECT author_id FROM recipes WHERE id = ?', [recipeID]);
+    if (ownerResult.length === 0) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+    if (ownerResult[0].author_id !== req.user.userId) {
+      return res.status(403).json({ message: 'Not authorized to delete this recipe' });
+    }
+
+    // ON DELETE CASCADE handles ingredients and steps
+    await query('DELETE FROM recipes WHERE id = ?', [recipeID]);
+
+    res.json({ message: 'Recipe deleted successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Database error', error: err.message });
+  }
+};
+
+module.exports = { getRecipe, getAllRecipes, getRecipesByUser, createRecipe, updateRecipe, deleteRecipe };

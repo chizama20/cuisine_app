@@ -1,3 +1,45 @@
 .home-hero {
   padding: var(--spacing-xl) 0 var(--spacing-lg);
 }
+
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+.recipe-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.recipe-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  height: 100%;
+}
+
+.recipe-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.recipe-card-title {
+  font-size: var(--font-size-xl);
+  color: var(--primary-color);
+  margin: 0 0 var(--spacing-sm) 0;
+  font-weight: 600;
+}
+
+.recipe-card-meta {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-xs);
+}
+
+.recipe-card-author {
+  color: var(--text-light);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
