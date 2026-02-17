@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { userAPI } from '../profile/profile.api';
 import { recipeAPI } from './recipes.api';
+import PageLayout from '../../components/layout/PageLayout';
 import './CreateRecipe.css';
 
 const CreateRecipePage = () => {
@@ -126,17 +127,9 @@ const CreateRecipePage = () => {
   }
 
   return (
-    <div className="create-recipe-container">
-      <nav className="navbar">
-        <div className="nav-brand">Recipe Creator</div>
-        <ul className="nav-links">
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/dashboard">Dashboard</Link></li>
-          <li><Link to="/profile">Profile</Link></li>
-        </ul>
-      </nav>
-
-      <div className="content-wrapper">
+    <PageLayout>
+      <div className="create-recipe-container">
+        <div className="content-wrapper">
         <div className="header">
           <h1>Create New Recipe</h1>
           <p>Share your culinary creation with the community</p>
@@ -293,8 +286,9 @@ const CreateRecipePage = () => {
             Create Recipe
           </button>
         </form>
+        </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 
