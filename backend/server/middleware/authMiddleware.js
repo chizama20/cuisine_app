@@ -9,7 +9,7 @@ const authenticateToken = (req, res, next) => {
   }
 
   // Verify JWT token
-  jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret_change_this', (err, decoded) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       return res.status(403).json({ message: 'Invalid token' });
     }

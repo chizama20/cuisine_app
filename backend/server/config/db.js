@@ -1,4 +1,5 @@
 const mysql = require('mysql2');
+const util = require('util');
 
 // Create a MySQL connection pool
 const db = mysql.createPool({
@@ -21,4 +22,6 @@ db.getConnection((err, connection) => {
   connection.release();
 });
 
-module.exports = db;
+const query = util.promisify(db.query).bind(db);
+
+module.exports = { db, query };

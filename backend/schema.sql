@@ -20,7 +20,7 @@ CREATE TABLE users (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Recipes table
-CREATE TABLE Recipes (
+CREATE TABLE recipes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(100) NOT NULL UNIQUE,
   description TEXT NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE ingredients (
   recipe_id INT NOT NULL,
   name VARCHAR(100) NOT NULL,
   amount VARCHAR(50) NOT NULL,
-  CONSTRAINT fk_recipe_ingredient FOREIGN KEY (recipe_id) REFERENCES Recipes(id)
+  CONSTRAINT fk_recipe_ingredient FOREIGN KEY (recipe_id) REFERENCES recipes(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Steps table
@@ -46,6 +46,6 @@ CREATE TABLE steps (
   recipe_id INT NOT NULL,
   step_number INT NOT NULL,
   instruction TEXT NOT NULL,
-  CONSTRAINT fk_recipe_step FOREIGN KEY (recipe_id) REFERENCES Recipes(id),
+  CONSTRAINT fk_recipe_step FOREIGN KEY (recipe_id) REFERENCES recipes(id),
   UNIQUE(recipe_id, step_number)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
