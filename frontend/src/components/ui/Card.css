@@ -1,0 +1,17 @@
+.card {
+  background-color: var(--white);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.card--centered {
+  text-align: center;
+}
+
+.card--outlined {
+  background-color: var(--white);
+  box-shadow: none;
+  border: 2px solid var(--primary-color);
+}

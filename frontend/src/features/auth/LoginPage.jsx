@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { authAPI } from './auth.api';
 import useAuth from '../../hooks/useAuth';
 import PageLayout from '../../components/layout/PageLayout';
+import Input from '../../components/ui/Input';
+import Button from '../../components/ui/Button';
 
 const LoginPage = () => {
   const [identifier, setIdentifier] = useState('');
@@ -26,14 +28,28 @@ const LoginPage = () => {
 
   return (
     <PageLayout>
-      <h2 style={{ textAlign: 'center', fontSize: '2rem', color: '#007bff', marginBottom: '20px' }}>Login</h2>
+      <h2 className="page-heading">Login</h2>
 
       {error && <p className="error">{error}</p>}
 
       <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Email or Phone Number" value={identifier} onChange={e => setIdentifier(e.target.value)} required />
-        <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
-        <button type="submit" style={{ marginTop: '10px' }}>Login</button>
+        <Input
+          label="Email or Phone"
+          type="text"
+          placeholder="Enter your email or phone"
+          value={identifier}
+          onChange={e => setIdentifier(e.target.value)}
+          required
+        />
+        <Input
+          label="Password"
+          type="password"
+          placeholder="Enter your password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          required
+        />
+        <Button type="submit">Login</Button>
       </form>
     </PageLayout>
   );

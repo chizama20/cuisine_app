@@ -1,0 +1,27 @@
+.profile-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.profile-field {
+  display: flex;
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.profile-field:last-child {
+  border-bottom: none;
+}
+
+.profile-label {
+  font-weight: 600;
+  color: var(--text-color);
+  min-width: 100px;
+  font-size: var(--font-size-base);
+}
+
+.profile-value {
+  color: var(--text-muted);
+  font-size: var(--font-size-base);
+}

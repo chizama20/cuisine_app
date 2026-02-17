@@ -20,25 +20,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--text-color);
+  background-color: var(--light-bg);
   line-height: 1.6;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-}
-
-/* Global container for all pages */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-md);
-  font-family: Arial, sans-serif;
-}
-
-/* App container */
-.App {
-  text-align: center;
 }
 
 /* Headings */
@@ -57,8 +45,8 @@ h3 {
 form {
   margin: 0 auto;
   max-width: 500px;
-  padding: var(--spacing-md);
-  background-color: var(--light-bg);
+  padding: var(--spacing-lg);
+  background-color: var(--white);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-md);
 }
@@ -67,17 +55,26 @@ form {
   margin-bottom: var(--spacing-md);
 }
 
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+}
+
 .form-group input,
 .form-group textarea,
 .form-group select {
   width: 100%;
-  padding: var(--spacing-sm);
+  padding: var(--spacing-sm) 12px;
   font-size: var(--font-size-base);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  margin-top: var(--spacing-xs);
   box-sizing: border-box;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: var(--white);
+  color: var(--text-color);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-group input:focus,
@@ -85,42 +82,21 @@ form {
 .form-group select:focus {
   border-color: var(--primary-color);
   outline: none;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  box-shadow: 0 0 0 3px var(--primary-light);
 }
 
-/* Button styling */
-button {
-  width: 100%;
-  padding: 12px;
-  background-color: var(--primary-color);
-  color: white;
-  font-size: var(--font-size-xl);
-  border: none;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-button:hover {
-  background-color: var(--primary-hover);
-}
-
-button:active {
-  transform: translateY(1px);
-}
-
-button:disabled {
-  background-color: var(--secondary-color);
-  cursor: not-allowed;
+/* Global input styles (outside form-group) */
+input, textarea, select {
+  font-family: inherit;
 }
 
 /* Error messages */
 .error {
   color: var(--danger-color);
-  font-size: 0.9rem;
-  margin-bottom: 15px;
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-sm);
   padding: var(--spacing-sm);
-  background-color: rgba(220, 53, 69, 0.1);
+  background-color: rgba(193, 68, 62, 0.08);
   border-radius: var(--border-radius);
   border-left: 4px solid var(--danger-color);
 }
@@ -128,53 +104,12 @@ button:disabled {
 /* Success messages */
 .success {
   color: var(--success-color);
-  font-size: 0.9rem;
-  margin-bottom: 15px;
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-sm);
   padding: var(--spacing-sm);
-  background-color: rgba(40, 167, 69, 0.1);
+  background-color: rgba(91, 140, 90, 0.08);
   border-radius: var(--border-radius);
   border-left: 4px solid var(--success-color);
-}
-
-/* Navigation menu */
-nav {
-  text-align: center;
-  margin-bottom: var(--spacing-md);
-}
-
-nav ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
-}
-
-nav ul li {
-  margin: 0;
-}
-
-nav ul li a,
-nav ul li button {
-  text-decoration: none;
-  color: var(--primary-color);
-  font-weight: bold;
-  padding: var(--spacing-sm) var(--spacing-md);
-  background-color: #f0f0f0;
-  border-radius: var(--border-radius);
-  transition: background-color 0.3s ease, color 0.3s ease;
-  border: none;
-  cursor: pointer;
-  font-size: var(--font-size-xl);
-  display: inline-block;
-}
-
-nav ul li a:hover,
-nav ul li button:hover {
-  background-color: var(--primary-color);
-  color: white;
 }
 
 /* Loading spinner */
@@ -187,13 +122,29 @@ nav ul li button:hover {
   color: var(--text-muted);
 }
 
-/* Card styling */
-.card {
-  background: white;
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-lg);
-  box-shadow: var(--shadow-md);
-  margin-bottom: var(--spacing-md);
+/* Page heading — reusable across pages */
+.page-heading {
+  text-align: center;
+  font-size: var(--font-size-3xl);
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-lg);
+  font-weight: 700;
+}
+
+/* Section title inside cards */
+.section-title {
+  margin-top: 0;
+  color: var(--primary-color);
+  font-size: var(--font-size-2xl);
+  margin-bottom: var(--spacing-sm);
+  font-weight: 600;
+}
+
+/* Body text in content areas */
+.content-text {
+  font-size: var(--font-size-lg);
+  color: var(--text-muted);
+  line-height: 1.6;
 }
 
 /* Utility classes */
