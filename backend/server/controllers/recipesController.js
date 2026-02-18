@@ -153,4 +153,34 @@ const deleteRecipe = async (req, res) => {
   }
 };
 
-module.exports = { getRecipe, getAllRecipes, getRecipesByUser, createRecipe, updateRecipe, deleteRecipe };
+const searchRecipes = async (req, res) => {
+  const { q, region, country } = req.query;
+  const conditions = [];
+  const params = [];
+
+  if (q) {
+    conditions.push('(r.title LIKE ? OR r.description LIKE ?)');
+    params.push(`%${q}%`, `%${q}%`);
+  }
+  if (region) {
+    conditions.push('r.region = ?');
+    params.push(region);
+  }
+  if (country) {
+    conditions.push('r.country = ?');
+    params.push(country);
+  }
+
+  const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+  const sql = `SELECT r.*, u.firstName, u.lastName FROM recipes r JOIN users u ON r.author_id = u.id ${whereClause} ORDER BY r.created_at DESC`;
+
+  try {
+    const results = await query(sql, params);
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Database error', error: err.message });
+  }
+};
+
+module.exports = { getRecipe, getAllRecipes, getRecipesByUser, createRecipe, updateRecipe, deleteRecipe, searchRecipes };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { userAPI } from './profile.api';
 import PageLayout from '../../components/layout/PageLayout';
 import Card from '../../components/ui/Card';
@@ -60,6 +61,11 @@ const ProfilePage = () => {
               <span className="profile-label">Address</span>
               <span className="profile-value">{user.address}</span>
             </div>
+          </div>
+          <div className="profile-link-row">
+            <Link to="/dashboard" className="profile-recipes-link">
+              View My Recipes &rarr;
+            </Link>
           </div>
         </Card>
       )}

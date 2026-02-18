@@ -15,3 +15,13 @@
   box-shadow: none;
   border: 2px solid var(--primary-color);
 }
+
+.card--hoverable {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.card--hoverable:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}

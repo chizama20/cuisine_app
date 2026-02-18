@@ -25,3 +25,21 @@
   color: var(--text-muted);
   font-size: var(--font-size-base);
 }
+
+.profile-link-row {
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--gray-200);
+  text-align: center;
+}
+
+.profile-recipes-link {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: var(--font-size-base);
+}
+
+.profile-recipes-link:hover {
+  text-decoration: underline;
+}

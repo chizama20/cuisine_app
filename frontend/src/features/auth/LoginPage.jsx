@@ -22,7 +22,7 @@ const LoginPage = () => {
       login(res.data.token);
       navigate('/dashboard');
     } catch (err) {
-      setError('Login failed. Please try again.');
+      setError(err.response?.data?.message || 'Login failed. Please try again.');
     }
   };
 

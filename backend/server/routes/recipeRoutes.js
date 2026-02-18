@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const authenticateToken = require('../middleware/authMiddleware');
-const { getRecipe, getAllRecipes, getRecipesByUser, createRecipe, updateRecipe, deleteRecipe } = require('../controllers/recipesController');
+const { getRecipe, getAllRecipes, getRecipesByUser, createRecipe, updateRecipe, deleteRecipe, searchRecipes } = require('../controllers/recipesController');
 
 // GET /api/recipes — all recipes (public)
 router.get('/', getAllRecipes);
+
+// GET /api/recipes/search — search/filter recipes (public)
+router.get('/search', searchRecipes);
 
 // GET /api/recipes/user/:userId — recipes by user (protected)
 router.get('/user/:userId', authenticateToken, getRecipesByUser);
