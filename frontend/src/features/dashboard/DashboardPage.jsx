@@ -3,8 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { recipeAPI } from '../recipes/recipes.api';
 import useAuth from '../../hooks/useAuth';
 import PageLayout from '../../components/layout/PageLayout';
-import Card from '../../components/ui/Card';
-import Button from '../../components/ui/Button';
 import { SkeletonCard } from '../../components/ui/Skeleton';
 import RegionBadge from '../../components/ui/RegionBadge';
 import './DashboardPage.css';
@@ -39,100 +37,106 @@ const DashboardPage = () => {
     }
   };
 
-  // Compute stats
   const stats = useMemo(() => {
     const regionSet = new Set(recipes.map(r => r.region).filter(Boolean));
-    const latest = recipes[0];
     return {
       total: recipes.length,
       regions: regionSet.size,
-      latestTitle: latest?.title || 'None yet'
+      latestTitle: recipes[0]?.title || null,
     };
   }, [recipes]);
 
   return (
     <PageLayout>
-      {/* Welcome Header */}
+      {/* Greeting + CTA */}
       <div className="dash-header">
         <h1 className="dash-greeting">
-          Welcome back, <span>{user?.firstName || 'Chef'}</span>!
+          Welcome back, {user?.firstName || 'Chef'}.
         </h1>
-        <p className="dash-subtext">Here's what's cooking in your kitchen.</p>
+        <button className="dash-new-btn" onClick={() => navigate('/create-recipe')}>
+          + New Recipe
+        </button>
       </div>
 
-      {/* Stats Bar */}
+      {/* Stats */}
       <div className="dash-stats">
-        <div className="dash-stat-card">
-          <p className="dash-stat-value">{loading ? '-' : stats.total}</p>
-          <p className="dash-stat-label">Total Recipes</p>
+        <div className="dash-stat">
+          <p className="dash-stat-value">{loading ? '—' : stats.total}</p>
+          <p className="dash-stat-label">Recipes</p>
         </div>
-        <div className="dash-stat-card">
-          <p className="dash-stat-value">{loading ? '-' : stats.regions}</p>
-          <p className="dash-stat-label">Regions Covered</p>
+        <div className="dash-stat">
+          <p className="dash-stat-value">{loading ? '—' : stats.regions}</p>
+          <p className="dash-stat-label">Regions</p>
         </div>
-        <div className="dash-stat-card">
-          <p className="dash-stat-value" title={stats.latestTitle}>
-            {loading ? '-' : (stats.latestTitle.length > 15 ? stats.latestTitle.slice(0, 15) + '...' : stats.latestTitle)}
+        <div className="dash-stat dash-stat--wide">
+          <p className="dash-stat-value dash-stat-value--title">
+            {loading ? '—' : (stats.latestTitle || 'None yet')}
           </p>
           <p className="dash-stat-label">Latest Recipe</p>
         </div>
       </div>
 
-      {/* Action Bar */}
-      <div className="dash-action-bar">
+      {/* Section header */}
+      <div className="dash-section-header">
         <h2 className="dash-section-title">My Recipes</h2>
-        <Button onClick={() => navigate('/create-recipe')}>
-          + Create New Recipe
-        </Button>
+        {!loading && recipes.length > 0 && (
+          <span className="dash-section-count">
+            {recipes.length} recipe{recipes.length !== 1 ? 's' : ''}
+          </span>
+        )}
       </div>
 
-      {/* Loading Skeletons */}
+      {/* Loading */}
       {loading && (
-        <div className="dash-skeleton-grid">
+        <div className="dash-grid">
           {[1, 2, 3].map(i => <SkeletonCard key={i} />)}
         </div>
       )}
 
-      {/* Empty State */}
+      {/* Empty state */}
       {!loading && recipes.length === 0 && (
-        <Card centered>
-          <div className="dash-empty">
-            <div className="dash-empty-icon">&#128221;</div>
-            <p className="dash-empty-text">You haven't created any recipes yet.</p>
-            <Button onClick={() => navigate('/create-recipe')}>
-              Create Your First Recipe
-            </Button>
-          </div>
-        </Card>
+        <div className="dash-empty">
+          <p className="dash-empty-text">You haven't created any recipes yet.</p>
+          <button className="dash-new-btn" onClick={() => navigate('/create-recipe')}>
+            Create Your First Recipe
+          </button>
+        </div>
       )}
 
-      {/* My Recipes Grid */}
+      {/* Recipe grid */}
       {!loading && recipes.length > 0 && (
-        <div className="dash-recipes-grid">
+        <div className="dash-grid">
           {recipes.map(recipe => (
-            <Card key={recipe.id} className="dash-recipe-card">
-              <div className="dash-recipe-header">
-                <h3 className="dash-recipe-title">{recipe.title}</h3>
-                <RegionBadge region={recipe.region} />
+            <article key={recipe.id} className="dash-card">
+              {/* Card body */}
+              <div className="dash-card-body">
+                <h3 className="dash-card-title">{recipe.title}</h3>
+                <div className="dash-card-meta">
+                  <span className="dash-card-date">
+                    {new Date(recipe.created_at).toLocaleDateString('en-US', {
+                      month: 'short', day: 'numeric', year: 'numeric'
+                    })}
+                  </span>
+                  <RegionBadge region={recipe.region} />
+                </div>
               </div>
-              <p className="dash-recipe-date">
-                {new Date(recipe.created_at).toLocaleDateString()}
-              </p>
-              <div className="dash-recipe-actions">
-                <Link to={`/recipes/${recipe.id}`} className="dash-btn dash-btn--view">
+
+              {/* Card actions */}
+              <div className="dash-card-actions">
+                <Link to={`/recipes/${recipe.id}`} className="dash-action-link">
                   View
                 </Link>
-                <Link to={`/recipes/${recipe.id}/edit`} className="dash-btn dash-btn--edit">
+                <Link to={`/recipes/${recipe.id}/edit`} className="dash-action-link dash-action-link--edit">
                   Edit
                 </Link>
                 <button
-                  className="dash-btn dash-btn--delete"
+                  className="dash-action-link dash-action-link--delete"
                   onClick={() => handleDelete(recipe.id)}
                 >
                   Delete
                 </button>
               </div>
-            </Card>
+            </article>
           ))}
         </div>
       )}
