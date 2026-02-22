@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './SearchBar.css';
 
-const SearchBar = ({ onSearch, regions = [], countries = [] }) => {
+const SearchBar = ({ onSearch, regions = [], countries = [], className = '' }) => {
   const [query, setQuery] = useState('');
   const [region, setRegion] = useState('');
   const [country, setCountry] = useState('');
@@ -17,7 +17,7 @@ const SearchBar = ({ onSearch, regions = [], countries = [] }) => {
   }, [query, region, country]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="search-bar">
+    <div className={`search-bar ${className}`.trim()}>
       <div className="search-input-wrapper">
         <span className="search-icon">&#x2315;</span>
         <input

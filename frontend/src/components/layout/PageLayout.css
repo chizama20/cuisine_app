@@ -4,10 +4,21 @@
   flex-direction: column;
 }
 
+/* Full-bleed slot — no max-width, no padding */
+.page-hero-slot {
+  width: 100%;
+}
+
 .page-content {
   flex: 1;
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: var(--spacing-md);
+  padding: var(--spacing-xl) var(--spacing-lg);
+}
+
+@media (max-width: 768px) {
+  .page-content {
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
 }
