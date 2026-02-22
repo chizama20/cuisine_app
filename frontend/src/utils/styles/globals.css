@@ -1,5 +1,5 @@
 /**
- * Global styles - consolidated from styles.css and App.css
+ * Global styles
  */
 
 @import './variables.css';
@@ -11,44 +11,38 @@
   padding: 0;
 }
 
-/* Base Body Styles */
+/* Base Body */
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--text-color);
-  background-color: var(--light-bg);
+  background-color: var(--white);
   line-height: 1.6;
+  font-size: var(--font-size-base);
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-/* Headings */
-h1, h2 {
-  text-align: center;
-  margin-bottom: var(--spacing-md);
-  font-size: var(--font-size-3xl);
+/* Headings — Playfair Display */
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-color);
 }
 
-h3 {
-  margin-top: 0;
-  font-size: var(--font-size-2xl);
-}
+h1 { font-size: var(--font-size-4xl); margin-bottom: var(--spacing-md); }
+h2 { font-size: var(--font-size-3xl); margin-bottom: var(--spacing-sm); }
+h3 { font-size: var(--font-size-2xl); margin-bottom: var(--spacing-sm); }
+h4 { font-size: var(--font-size-xl);  margin-bottom: var(--spacing-xs); }
 
 /* Form Styling */
 form {
   margin: 0 auto;
   max-width: 500px;
-  padding: var(--spacing-lg);
-  background-color: var(--white);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-md);
 }
 
 .form-group {
@@ -57,10 +51,12 @@ form {
 
 .form-group label {
   display: block;
-  font-weight: 600;
-  color: var(--text-color);
+  font-weight: 500;
+  color: var(--text-muted);
   margin-bottom: var(--spacing-xs);
   font-size: var(--font-size-sm);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 .form-group input,
@@ -69,9 +65,9 @@ form {
   width: 100%;
   padding: var(--spacing-sm) 12px;
   font-size: var(--font-size-base);
+  font-family: var(--font-sans);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  box-sizing: border-box;
   background-color: var(--white);
   color: var(--text-color);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -85,9 +81,9 @@ form {
   box-shadow: 0 0 0 3px var(--primary-light);
 }
 
-/* Global input styles (outside form-group) */
-input, textarea, select {
-  font-family: inherit;
+/* Global input font inherit */
+input, textarea, select, button {
+  font-family: var(--font-sans);
 }
 
 /* Error messages */
@@ -98,7 +94,7 @@ input, textarea, select {
   padding: var(--spacing-sm);
   background-color: rgba(193, 68, 62, 0.08);
   border-radius: var(--border-radius);
-  border-left: 4px solid var(--danger-color);
+  border-left: 3px solid var(--danger-color);
 }
 
 /* Success messages */
@@ -109,52 +105,48 @@ input, textarea, select {
   padding: var(--spacing-sm);
   background-color: rgba(91, 140, 90, 0.08);
   border-radius: var(--border-radius);
-  border-left: 4px solid var(--success-color);
+  border-left: 3px solid var(--success-color);
 }
 
-/* Loading spinner */
+/* Loading */
 .loading {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 200px;
   font-size: var(--font-size-lg);
-  color: var(--text-muted);
+  color: var(--text-light);
 }
 
-/* Page heading — reusable across pages */
+/* Page heading */
 .page-heading {
-  text-align: center;
+  font-family: var(--font-serif);
   font-size: var(--font-size-3xl);
-  color: var(--primary-color);
-  margin-bottom: var(--spacing-lg);
   font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: var(--spacing-lg);
 }
 
-/* Section title inside cards */
+/* Section title */
 .section-title {
-  margin-top: 0;
-  color: var(--primary-color);
+  font-family: var(--font-serif);
   font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--text-color);
   margin-bottom: var(--spacing-sm);
-  font-weight: 600;
 }
 
-/* Body text in content areas */
+/* Body text */
 .content-text {
   font-size: var(--font-size-lg);
   color: var(--text-muted);
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 /* Utility classes */
-.text-center {
-  text-align: center;
-}
-
-.text-muted {
-  color: var(--text-muted);
-}
+.text-center  { text-align: center; }
+.text-muted   { color: var(--text-muted); }
+.text-light   { color: var(--text-light); }
 
 .mt-1 { margin-top: var(--spacing-sm); }
 .mt-2 { margin-top: var(--spacing-md); }
