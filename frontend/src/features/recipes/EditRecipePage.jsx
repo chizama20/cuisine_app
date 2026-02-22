@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { recipeAPI } from './recipes.api';
 import useAuth from '../../hooks/useAuth';
 import PageLayout from '../../components/layout/PageLayout';
+import Input from '../../components/ui/Input';
 import './CreateRecipe.css';
 
 const EditRecipePage = () => {
@@ -25,7 +26,6 @@ const EditRecipePage = () => {
         const res = await recipeAPI.getById(id);
         const recipe = res.data.recipe;
 
-        // Verify ownership
         if (user && recipe.author_id !== user.userId) {
           navigate(`/recipes/${id}`);
           return;
@@ -39,22 +39,18 @@ const EditRecipePage = () => {
         setSteps(res.data.steps.length > 0 ? res.data.steps : [{ step_number: 1, instruction: '' }]);
         setLoading(false);
       } catch (err) {
-        setError('Failed to load recipe');
+        setError('Failed to load recipe.');
         setLoading(false);
       }
     };
-
     fetchRecipe();
   }, [id, user, navigate]);
 
-  const addIngredient = () => {
-    setIngredients([...ingredients, { name: '', amount: '' }]);
-  };
+  const addIngredient = () => setIngredients([...ingredients, { name: '', amount: '' }]);
 
   const removeIngredient = (index) => {
-    if (ingredients.length > 1) {
+    if (ingredients.length > 1)
       setIngredients(ingredients.filter((_, i) => i !== index));
-    }
   };
 
   const handleIngredientChange = (index, field, value) => {
@@ -63,9 +59,8 @@ const EditRecipePage = () => {
     setIngredients(updated);
   };
 
-  const addStep = () => {
+  const addStep = () =>
     setSteps([...steps, { step_number: steps.length + 1, instruction: '' }]);
-  };
 
   const removeStep = (index) => {
     if (steps.length > 1) {
@@ -85,24 +80,18 @@ const EditRecipePage = () => {
     e.preventDefault();
     setError('');
 
-    const hasEmptyIngredients = ingredients.some(ing => !ing.name || !ing.amount);
-    const hasEmptySteps = steps.some(step => !step.instruction);
-
-    if (hasEmptyIngredients) {
-      setError('Please fill in all ingredient fields');
+    if (ingredients.some(ing => !ing.name || !ing.amount)) {
+      setError('Please fill in all ingredient fields.');
       return;
     }
-    if (hasEmptySteps) {
-      setError('Please fill in all step instructions');
+    if (steps.some(step => !step.instruction)) {
+      setError('Please fill in all step instructions.');
       return;
     }
 
     try {
-      const recipeData = { title, description, region, country, ingredients, steps };
-      const res = await recipeAPI.update(id, recipeData);
-      if (res.status === 200) {
-        navigate(`/recipes/${id}`);
-      }
+      const res = await recipeAPI.update(id, { title, description, region, country, ingredients, steps });
+      if (res.status === 200) navigate(`/recipes/${id}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to update recipe. Please try again.');
     }
@@ -118,87 +107,144 @@ const EditRecipePage = () => {
 
   return (
     <PageLayout>
-      <div className="create-recipe-container">
-        <div className="content-wrapper">
-          <div className="header">
-            <h1>Edit Recipe</h1>
-            <p>Update your recipe details</p>
+      <div className="rform-header">
+        <h1 className="rform-heading">Edit Recipe</h1>
+        <p className="rform-subheading">Update your recipe details.</p>
+      </div>
+
+      <form className="rform" onSubmit={handleSubmit}>
+        {/* Details */}
+        <div className="rform-section">
+          <div className="rform-section-header">
+            <h2 className="rform-section-title">Recipe Details</h2>
           </div>
 
-          <form onSubmit={handleSubmit} className="recipe-form">
-            <div className="form-section">
-              <h2>Recipe Details</h2>
-              <div className="form-grid">
-                <div className="form-group full-width">
-                  <label>Recipe Title *</label>
-                  <input type="text" placeholder="Enter recipe title" value={title} onChange={e => setTitle(e.target.value)} required />
-                </div>
-                <div className="form-group full-width">
-                  <label>Description *</label>
-                  <textarea placeholder="Describe your recipe" value={description} onChange={e => setDescription(e.target.value)} required rows="4" />
-                </div>
-                <div className="form-group">
-                  <label>Region *</label>
-                  <input type="text" placeholder="e.g., Mediterranean" value={region} onChange={e => setRegion(e.target.value)} required />
-                </div>
-                <div className="form-group">
-                  <label>Country *</label>
-                  <input type="text" placeholder="e.g., Italy" value={country} onChange={e => setCountry(e.target.value)} required />
-                </div>
-              </div>
-            </div>
-
-            <div className="form-section">
-              <div className="section-header">
-                <h2>Ingredients</h2>
-                <button type="button" onClick={addIngredient} className="btn btn-add">+ Add Ingredient</button>
-              </div>
-              <div className="ingredients-list">
-                {ingredients.map((ingredient, index) => (
-                  <div key={index} className="ingredient-item">
-                    <div className="ingredient-number">{index + 1}</div>
-                    <div className="ingredient-fields">
-                      <input type="text" placeholder="Ingredient name" value={ingredient.name} onChange={e => handleIngredientChange(index, 'name', e.target.value)} required />
-                      <input type="text" placeholder="Amount (e.g., 2 cups)" value={ingredient.amount} onChange={e => handleIngredientChange(index, 'amount', e.target.value)} required className="amount-input" />
-                    </div>
-                    {ingredients.length > 1 && (
-                      <button type="button" onClick={() => removeIngredient(index)} className="btn btn-remove" title="Remove ingredient">x</button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="form-section">
-              <div className="section-header">
-                <h2>Instructions</h2>
-                <button type="button" onClick={addStep} className="btn btn-add">+ Add Step</button>
-              </div>
-              <div className="steps-list">
-                {steps.map((step, index) => (
-                  <div key={index} className="step-item">
-                    <div className="step-number">{step.step_number}</div>
-                    <div className="step-content">
-                      <textarea placeholder={`Describe step ${step.step_number}`} value={step.instruction} onChange={e => handleStepChange(index, e.target.value)} required rows="3" />
-                    </div>
-                    {steps.length > 1 && (
-                      <button type="button" onClick={() => removeStep(index)} className="btn btn-remove" title="Remove step">x</button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {error && (
-              <div className="error-message">
-                <span>Error:</span> {error}
-              </div>
-            )}
-
-            <button type="submit" className="btn btn-submit">Update Recipe</button>
-          </form>
+          <Input
+            label="Title"
+            type="text"
+            placeholder="e.g., Pasta Carbonara"
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            required
+          />
+          <Input
+            label="Description"
+            type="textarea"
+            placeholder="What makes this recipe special..."
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            required
+          />
+          <div className="rform-two-col">
+            <Input
+              label="Region"
+              type="text"
+              placeholder="e.g., Mediterranean"
+              value={region}
+              onChange={e => setRegion(e.target.value)}
+              required
+            />
+            <Input
+              label="Country"
+              type="text"
+              placeholder="e.g., Italy"
+              value={country}
+              onChange={e => setCountry(e.target.value)}
+              required
+            />
+          </div>
         </div>
-      </div>
+
+        {/* Ingredients */}
+        <div className="rform-section">
+          <div className="rform-section-header">
+            <h2 className="rform-section-title">Ingredients</h2>
+            <button type="button" className="rform-add-btn" onClick={addIngredient}>
+              + Add
+            </button>
+          </div>
+
+          <div className="rform-ing-list">
+            {ingredients.map((ing, index) => (
+              <div key={index} className="rform-ing-row">
+                <span className="rform-ing-num">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <input
+                  className="rform-input"
+                  type="text"
+                  placeholder="Ingredient name"
+                  value={ing.name}
+                  onChange={e => handleIngredientChange(index, 'name', e.target.value)}
+                  required
+                />
+                <input
+                  className="rform-input"
+                  type="text"
+                  placeholder="Amount"
+                  value={ing.amount}
+                  onChange={e => handleIngredientChange(index, 'amount', e.target.value)}
+                  required
+                />
+                {ingredients.length > 1 && (
+                  <button
+                    type="button"
+                    className="rform-remove-btn"
+                    onClick={() => removeIngredient(index)}
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Steps */}
+        <div className="rform-section">
+          <div className="rform-section-header">
+            <h2 className="rform-section-title">Instructions</h2>
+            <button type="button" className="rform-add-btn" onClick={addStep}>
+              + Add Step
+            </button>
+          </div>
+
+          <div className="rform-steps-list">
+            {steps.map((step, index) => (
+              <div key={index} className="rform-step-row">
+                <div className="rform-step-header">
+                  <span className="rform-step-num">
+                    {String(step.step_number).padStart(2, '0')}
+                  </span>
+                  {steps.length > 1 && (
+                    <button
+                      type="button"
+                      className="rform-remove-btn"
+                      onClick={() => removeStep(index)}
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+                <textarea
+                  className="rform-textarea"
+                  placeholder={`Describe step ${step.step_number}...`}
+                  value={step.instruction}
+                  onChange={e => handleStepChange(index, e.target.value)}
+                  required
+                  rows={3}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {error && <p className="error">{error}</p>}
+
+        <button type="submit" className="rform-submit-btn">
+          Save Changes
+        </button>
+      </form>
     </PageLayout>
   );
 };
