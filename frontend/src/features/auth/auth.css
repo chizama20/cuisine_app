@@ -1,0 +1,175 @@
+/* ===================================================
+   Shared Auth Layout — Login & Register
+   ================================================= */
+
+.auth-page {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== Left Dark Panel ===== */
+.auth-panel-left {
+  width: 42%;
+  flex-shrink: 0;
+  background: #111111;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--spacing-xl) 52px;
+}
+
+.auth-brand {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+.auth-tagline {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--spacing-xl) 0;
+}
+
+.auth-tagline-line {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: clamp(2.25rem, 3.5vw, 3.25rem);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+.auth-tagline-line--muted {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.auth-panel-footnote {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-xs);
+  color: rgba(255, 255, 255, 0.22);
+  letter-spacing: 0.03em;
+}
+
+/* ===== Right Form Panel ===== */
+.auth-panel-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl) var(--spacing-xl);
+  background: var(--white);
+  overflow-y: auto;
+}
+
+.auth-form-wrap {
+  width: 100%;
+  max-width: 380px;
+}
+
+.auth-heading {
+  font-family: var(--font-serif);
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+
+.auth-subheading {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* Override global form defaults */
+form.auth-form {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Two-column row for names */
+.auth-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-sm);
+}
+
+/* Error override — full width */
+.auth-form .error {
+  margin-bottom: var(--spacing-md);
+}
+
+/* Submit button — dark to match other CTAs */
+.auth-form .btn--primary {
+  margin-top: var(--spacing-sm);
+  background-color: #111111;
+  color: #ffffff;
+}
+
+.auth-form .btn--primary:hover:not(:disabled) {
+  background-color: #2a2a2a;
+}
+
+/* Switch link */
+.auth-switch {
+  margin-top: var(--spacing-lg);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.auth-switch a {
+  color: var(--text-color);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  margin-left: 4px;
+}
+
+.auth-switch a:hover {
+  opacity: 0.7;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .auth-page {
+    flex-direction: column;
+  }
+
+  /* Collapse left panel to a slim header bar */
+  .auth-panel-left {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md) var(--spacing-lg);
+    min-height: auto;
+  }
+
+  .auth-tagline,
+  .auth-panel-footnote {
+    display: none;
+  }
+
+  .auth-panel-right {
+    flex: 1;
+    padding: var(--spacing-xl) var(--spacing-md);
+    align-items: flex-start;
+  }
+
+  .auth-form-row {
+    grid-template-columns: 1fr;
+  }
+}
