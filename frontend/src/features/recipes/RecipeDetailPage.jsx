@@ -5,6 +5,7 @@ import { formatRecipeData } from './recipes.utils';
 import useAuth from '../../hooks/useAuth';
 import PageLayout from '../../components/layout/PageLayout';
 import Button from '../../components/ui/Button';
+import RegionBadge from '../../components/ui/RegionBadge';
 import { SkeletonCard } from '../../components/ui/Skeleton';
 import './RecipeDetailPage.css';
 
@@ -18,7 +19,6 @@ const RecipeDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Cook Mode state
   const [cookMode, setCookMode] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [showIngredients, setShowIngredients] = useState(false);
@@ -30,14 +30,34 @@ const RecipeDetailPage = () => {
         setRecipe(formatRecipeData(res.data.recipe));
         setIngredients(res.data.ingredients);
         setSteps(res.data.steps);
-        setLoading(false);
       } catch (err) {
         setError('Recipe not found');
-        setLoading(false);
       }
+      setLoading(false);
     };
     fetchRecipe();
   }, [id]);
+
+  // Lock body scroll in cook mode
+  useEffect(() => {
+    document.body.style.overflow = cookMode ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [cookMode]);
+
+  // Keyboard navigation in cook mode
+  useEffect(() => {
+    if (!cookMode) return;
+    const handler = (e) => {
+      if (e.key === 'ArrowRight' && currentStep < steps.length - 1)
+        setCurrentStep(s => s + 1);
+      if (e.key === 'ArrowLeft' && currentStep > 0)
+        setCurrentStep(s => s - 1);
+      if (e.key === 'Escape')
+        setCookMode(false);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [cookMode, currentStep, steps.length]);
 
   const handleDelete = async () => {
     if (!window.confirm('Are you sure you want to delete this recipe? This cannot be undone.')) return;
@@ -51,7 +71,6 @@ const RecipeDetailPage = () => {
 
   const isOwner = user && recipe && user.userId === recipe.author_id;
 
-  // Loading state
   if (loading) {
     return (
       <PageLayout>
@@ -61,16 +80,13 @@ const RecipeDetailPage = () => {
     );
   }
 
-  // Error state
   if (error || !recipe) {
     return (
       <PageLayout>
         <div className="detail-error">
-          <h2 className="page-heading">Recipe Not Found</h2>
-          <p className="content-text text-center">{error}</p>
-          <div className="text-center mt-2">
-            <Link to="/">Back to Home</Link>
-          </div>
+          <h2 className="detail-error-title">Recipe Not Found</h2>
+          <p className="detail-error-text">{error}</p>
+          <Link to="/" className="detail-error-link">← Back to Home</Link>
         </div>
       </PageLayout>
     );
@@ -79,46 +95,60 @@ const RecipeDetailPage = () => {
   return (
     <>
       <PageLayout>
-        {/* Hero Area */}
+        {/* Hero */}
         <div className="detail-hero">
-          <h1 className="detail-hero-title">{recipe.title}</h1>
-          <p className="detail-hero-desc">{recipe.description}</p>
-          <div className="detail-hero-meta">
-            <span className="detail-hero-badge">{recipe.region}</span>
-            <span className="detail-hero-badge">{recipe.country}</span>
-            <span className="detail-hero-dot">&bull;</span>
-            <span className="detail-hero-author">By {recipe.firstName} {recipe.lastName}</span>
-            <span className="detail-hero-dot">&bull;</span>
-            <span className="detail-hero-date">{recipe.createdAt}</span>
+          <h1 className="detail-title">{recipe.title}</h1>
+          {recipe.description && (
+            <p className="detail-desc">{recipe.description}</p>
+          )}
+          <div className="detail-meta">
+            {recipe.region && <RegionBadge region={recipe.region} />}
+            {recipe.country && (
+              <span className="detail-meta-item">{recipe.country}</span>
+            )}
+            <span className="detail-meta-dot">&middot;</span>
+            <span className="detail-meta-item">
+              By {recipe.firstName} {recipe.lastName}
+            </span>
+            <span className="detail-meta-dot">&middot;</span>
+            <span className="detail-meta-item">{recipe.createdAt}</span>
           </div>
         </div>
 
-        {/* Ingredients Bar */}
-        <div className="detail-ingredients">
-          <h2 className="detail-section-title">Ingredients</h2>
-          <div className="ingredients-grid">
-            {ingredients.map((ing, i) => (
-              <div key={i} className="ingredient-item">
-                <span className="ingredient-bullet" />
-                <span className="ingredient-name">{ing.name}</span>
-                <span className="ingredient-amount">{ing.amount}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Steps Section */}
-        <div className="detail-steps">
-          <h2 className="detail-section-title">Instructions</h2>
-          {steps.map((step, i) => (
-            <div key={i} className="step-card">
-              <div className="step-circle">{step.step_number}</div>
-              <p className="step-text">{step.instruction}</p>
+        {/* Ingredients */}
+        {ingredients.length > 0 && (
+          <section className="detail-section">
+            <h2 className="detail-section-title">Ingredients</h2>
+            <div className="ingredients-chips">
+              {ingredients.map((ing, i) => (
+                <div key={i} className="ingredient-chip">
+                  <span className="ingredient-chip-name">{ing.name}</span>
+                  <span className="ingredient-chip-sep">&middot;</span>
+                  <span className="ingredient-chip-amount">{ing.amount}</span>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </section>
+        )}
 
-        {/* Start Cooking Button */}
+        {/* Steps */}
+        {steps.length > 0 && (
+          <section className="detail-section">
+            <h2 className="detail-section-title">Instructions</h2>
+            <ol className="steps-list">
+              {steps.map((step, i) => (
+                <li key={i} className="step-row">
+                  <span className="step-num">
+                    {String(step.step_number).padStart(2, '0')}
+                  </span>
+                  <p className="step-text">{step.instruction}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {/* Start Cooking */}
         {steps.length > 0 && (
           <button
             className="detail-cook-btn"
@@ -141,35 +171,38 @@ const RecipeDetailPage = () => {
         )}
       </PageLayout>
 
-      {/* Cook Mode Overlay */}
+      {/* Cook Mode */}
       {cookMode && (
         <div className="cook-overlay">
-          <div className="cook-header">
-            <h2 className="cook-title">{recipe.title}</h2>
-            <span className="cook-counter">
-              Step {currentStep + 1} of {steps.length}
-            </span>
-            <button className="cook-exit-btn" onClick={() => setCookMode(false)}>
+          {/* Top bar */}
+          <div className="cook-topbar">
+            <span className="cook-brand">Cuisine</span>
+            <span className="cook-recipe-name">{recipe.title}</span>
+            <button className="cook-exit" onClick={() => setCookMode(false)}>
               Exit
             </button>
           </div>
 
-          <div className="cook-body">
-            <div className="cook-step-number">{steps[currentStep]?.step_number}</div>
-            <p className="cook-step-instruction">{steps[currentStep]?.instruction}</p>
+          {/* Main */}
+          <div className="cook-main">
+            <div className="cook-step-num">
+              {String(steps[currentStep]?.step_number).padStart(2, '0')}
+            </div>
+            <p className="cook-instruction">
+              {steps[currentStep]?.instruction}
+            </p>
 
             <button
-              className="cook-ingredients-toggle"
-              onClick={() => setShowIngredients(!showIngredients)}
+              className="cook-ing-toggle"
+              onClick={() => setShowIngredients(v => !v)}
             >
               {showIngredients ? 'Hide Ingredients' : 'Show Ingredients'}
             </button>
 
             {showIngredients && (
-              <div className="cook-ingredients-panel">
-                <h4>Ingredients</h4>
+              <div className="cook-ing-panel">
                 {ingredients.map((ing, i) => (
-                  <div key={i} className="cook-ingredient-item">
+                  <div key={i} className="cook-ing-row">
                     <span>{ing.name}</span>
                     <span>{ing.amount}</span>
                   </div>
@@ -178,33 +211,34 @@ const RecipeDetailPage = () => {
             )}
           </div>
 
+          {/* Footer nav */}
           <div className="cook-footer">
             <button
-              className="cook-nav-btn cook-nav-btn--prev"
+              className="cook-nav cook-nav--prev"
               onClick={() => setCurrentStep(s => s - 1)}
               disabled={currentStep === 0}
             >
-              Previous
+              ← Previous
             </button>
 
-            <div className="cook-progress">
+            <div className="cook-dots">
               {steps.map((_, i) => (
                 <span
                   key={i}
-                  className={`cook-progress-dot ${
-                    i === currentStep ? 'cook-progress-dot--active' :
-                    i < currentStep ? 'cook-progress-dot--done' : ''
+                  className={`cook-dot ${
+                    i === currentStep ? 'cook-dot--active' :
+                    i < currentStep  ? 'cook-dot--done' : ''
                   }`}
                 />
               ))}
             </div>
 
             <button
-              className="cook-nav-btn cook-nav-btn--next"
+              className="cook-nav cook-nav--next"
               onClick={() => setCurrentStep(s => s + 1)}
               disabled={currentStep === steps.length - 1}
             >
-              Next Step
+              Next →
             </button>
           </div>
         </div>
